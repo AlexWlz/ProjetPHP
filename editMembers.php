@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    
+
 
 
 <style>
@@ -43,7 +43,7 @@
             echo 'Invalid member ID';
             exit(1);
         }
-        
+
         if ($memberId === 0 || $memberId < 1 || $memberId === 1) {
             echo 'Invalid member ID';
             exit(1);
@@ -55,10 +55,10 @@
             $password=$_POST['password'];
 
             $modif= "UPDATE users SET
-            username='$username',
-            email='$email',
-            password='".hash('sha256', $password)."'
-            WHERE id='$memberId'";
+                username='$username',
+                email='$email',
+                password='".hash('sha256', $password)."'
+                WHERE id='$memberId'";
 
             $res = mysqli_query($conn, $modif);
 
@@ -73,12 +73,12 @@
             $delete = mysqli_prepare($conn, "DELETE FROM users WHERE `id`=?");
             /* Lecture des marqueurs */
             mysqli_stmt_bind_param($delete, "i", $memberId);
-        
+
             /* Exécution de la requête */
             mysqli_stmt_execute($delete);
             header('Location: members.php');
         }
-        
+
 
         // SQL de récupération des données du membre n°$memberId.
         // Attention aux injections :P
@@ -86,7 +86,7 @@
         //$res = mysqli_query($conn, $query);
         $memberInfo = mysqli_fetch_assoc(mysqli_query($conn, $query));
 
-        
+
         ?>
         <a href="index.php">Acceuil</a>
         <a href="members.php">Afficher les membres</a>
@@ -105,7 +105,7 @@
             <input type="submit" name="submit" class="box-button" value="Modifier"/>
             <input type="submit" name="delete" class="box-button" value="Supprimer le compte"/>
         </form>
-        
+
         <?php }else{
            ?>
         <a href="index.php">Acceuil</a>
