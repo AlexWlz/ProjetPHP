@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    
+
 
 
     <style>
@@ -34,7 +34,7 @@
             // récupérer le nom d'école et supprimer les antislashes ajoutés par le formulaire et mettre en minuscule
             $school = stripslashes($_REQUEST['name']);
             $school = mysqli_real_escape_string($conn, $school);
-            
+
             //requéte SQL
             $query = "INSERT INTO `school`(`name`, `number_user_of_school`) VALUES ('$school','0')";
             // Exécuter la requête sur la base de données

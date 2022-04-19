@@ -181,52 +181,7 @@
             <input type="submit" name="submit" class="box-button" value="Modifier" />
             <input type="submit" name="delete" class="box-button" value="Supprimer l'école" />
         </form>
-        <form action="" method="post">
-            <h2>Ajouter un membre à cette école :</h2>
-            <select name="idmem">
-                <?php
 
-
-                $test = "SELECT DISTINCT `a`.`id`, `a`.`username`
-                FROM `users` AS `a`
-                LEFT JOIN `user_school_connector` AS `b` ON `a`.`id` = `b`.`id_user`
-                RIGHT JOIN `user_school_connector` AS `c` ON `a`.`id` = `c`.`id_user`
-                WHERE `b`.`id_school` = $schoolId
-                AND `c`.`id_school` <> $schoolId OR `c`.`id_school` IS NULL";
-
-                $req = $pdo->query($test);
-
-                $requetAdd = "SELECT DISTINCT `a`.`id`, `a`.`username`
-                FROM `users` AS `a`
-                LEFT JOIN `user_school_connector` AS `b`
-                ON `a`.`id` = `b`.`id_user`
-                WHERE `b`.`id_school` <> $schoolId OR `b`.`id_school` IS NULL";
-
-                $requete = $pdo->query($requetAdd);
-
-                $o = 0;
-                foreach ($req as $b) {
-                    if (empty($req)) {
-                        echo '<option class="az" value="' . $b['id'] . '">' . $b['username'] . '</option>';
-                        $o = $o + 1;
-                    } else {
-                        while ($row = $requete->fetch(PDO::FETCH_ASSOC)) {
-                            if ($row['id'] !== $b['id']) {
-                                echo '<option class="az" value="' . $row['id'] . '">' . $row['username'] . '</option>';
-                                $o = $o + 1;
-                            }
-                        }
-                    }
-                }
-                if ($o == 0) {
-                    echo '<option class="az" value="">Personne à ajoutée</option>';
-                }
-
-
-                ?>
-            </select>
-            <input type="submit" name="addschool" value="Ajouter" class="box-button" />
-        </form>
 
 
         <form action="" method="post">
@@ -256,6 +211,64 @@
             </select>
             <input type="submit" name="deleteSchool" value="Supprimer" class="box-button" />
         </form>
+        <form action="" method="post">
+            <h2>Ajouter un membre à cette école :</h2>
+            <select name="idmem">
+                <?php
+
+
+                $test = "SELECT DISTINCT *
+                FROM `users` AS `a`
+                LEFT JOIN `user_school_connector` AS `b`
+                ON `a`.`id` = `b`.`id_user`
+                WHERE `b`.`id_school` = $schoolId";
+
+                $req = $pdo->query($test);
+
+                $requetAdd = "SELECT DISTINCT *
+                FROM `users` AS `a`
+                LEFT JOIN `user_school_connector` AS `b`
+                ON `a`.`id` = `b`.`id_user`
+                WHERE `b`.`id_school` <> $schoolId OR `b`.`id_school` IS NULL";
+
+                $requete = $pdo->query($requetAdd);
+
+
+                $u = "SELECT DISTINCT * FROM `users`";
+
+                $us = $pdo->query($u);
+
+                $o = 0;
+
+                if ($m == 0) {
+                    foreach ($us as $use){
+                        echo '<option class="az" value="' . $use['id'] . '">' . $use['username'] . '</option>';
+                        $o = $o + 1;
+                    }
+                } elseif ($m != 0){
+
+                    foreach ($req as $b) {
+                        while ($row = $requete->fetch(PDO::FETCH_ASSOC)) {
+                            if($row['id'] !== $b['id']){
+                                if($schoolId !== $row['id_school'] && $row['id_school'] == ""){
+                                    echo '<option class="az" value="' . $row['id'] . '">' . $row['username'] .  $row['id_school'] .'</option>';
+                                    $o = $o + 1;
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($o == 0) {
+                    echo '<option class="az" value="">Personne à ajoutée</option>';
+                }
+
+
+                ?>
+            </select>
+            <input type="submit" name="addschool" value="Ajouter" class="box-button" />
+        </form>
 
         <?php
         if ($m != 0) {
@@ -264,7 +277,7 @@
                 <h2>Ajouter une intervention :</h2>
                 <select name="idmem3">
                     <?php
-                    $requetAdd = "SELECT *
+                    $requetAdd = "SELECT DISTINCT *
                 FROM `users` AS `a`
                 LEFT JOIN `user_school_connector` AS `b`
                 ON `a`.`id` = `b`.`id_user`
